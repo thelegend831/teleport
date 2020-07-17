@@ -211,13 +211,13 @@ release: buildbox
 
 #
 # Create a Teleport FIPS package using the build container.
-# This is a special case because it only builds and packages the Enterprise FIPS binaries, no OSS.
+# This is a special case because we only use the Enterprise FIPS binaries, no OSS.
 #
 .PHONY:release-fips
 release-fips: buildbox-fips
-	@if [ -z ${VERSION} ]; then echo "VERSION is not set"; exit 1; fi
+	#@if [ -z ${VERSION} ]; then echo "VERSION is not set"; exit 1; fi
 	docker run $(DOCKERFLAGS) $(BCCFLAGS) -i $(NOROOT) $(BUILDBOXFIPS) \
-		/usr/bin/make -C e release -e ADDFLAGS="$(ADDFLAGS)" OS=$(OS) ARCH=$(ARCH) RUNTIME=$(RUNTIME) FIPS=yes VERSION=$(VERSION) GITTAG=v$(VERSION)
+		/usr/bin/make release -e ADDFLAGS="$(ADDFLAGS)" OS=$(OS) ARCH=$(ARCH) RUNTIME=$(RUNTIME) FIPS=yes
 
 #
 # Create a Teleport package for CentOS 6 using the build container.
@@ -225,16 +225,16 @@ release-fips: buildbox-fips
 .PHONY:release-centos6
 release-centos6: buildbox-centos6
 	docker run $(DOCKERFLAGS) -i $(NOROOT) $(BUILDBOXCENTOS6) \
-		/usr/bin/make release -e ADDFLAGS="$(ADDFLAGS)" OS=$(OS) ARCH=$(ARCH) RUNTIME=$(RUNTIME)
+		/usr/bin/make release -e ADDFLAGS="$(ADDFLAGS)" OS=$(OS) ARCH=$(ARCH) RUNTIME=$(RUNTIME) CENTOS6=yes
 
 #
 # Create a Teleport FIPS package for CentOS 6 using the build container.
-# This is a special case because it only builds and packages the Enterprise FIPS binaries, no OSS.
+# This is a special case because we only use the Enterprise FIPS binaries, no OSS.
 #
 .PHONY:release-centos6-fips
 release-centos6-fips: buildbox-centos6-fips
 	docker run $(DOCKERFLAGS) -i $(NOROOT) $(BUILDBOXCENTOS6FIPS) \
-		/usr/bin/make release -e ADDFLAGS="$(ADDFLAGS)" OS=$(OS) ARCH=$(ARCH) RUNTIME=$(RUNTIME) FIPS=yes
+		/usr/bin/make release -e ADDFLAGS="$(ADDFLAGS)" OS=$(OS) ARCH=$(ARCH) RUNTIME=$(RUNTIME) CENTOS6=yes FIPS=yes
 
 #
 # Create a Windows Teleport package using the build container.

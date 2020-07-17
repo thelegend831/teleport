@@ -30,13 +30,21 @@ GO_LINTERS ?= "unused,govet,typecheck,deadcode,goimports,varcheck,structcheck,bo
 OS ?= $(shell go env GOOS)
 ARCH ?= $(shell go env GOARCH)
 FIPS ?=
-RELEASE=teleport-$(GITTAG)-$(OS)-$(ARCH)-bin
+RELEASE = teleport-$(GITTAG)-$(OS)-$(ARCH)-bin
+
+ifneq ("$(CENTOS6)","")
+RELEASE := teleport-$(GITTAG)-$(OS)-$(ARCH)-centos6-bin
+endif
 
 # FIPS support must be requested at build time.
 FIPS_MESSAGE := "without FIPS support"
 ifneq ("$(FIPS)","")
 FIPS_TAG := fips
 FIPS_MESSAGE := "with FIPS support"
+RELEASE = teleport-$(GITTAG)-$(OS)-$(ARCH)-fips-bin
+ifneq ("$(CENTOS6)","")
+RELEASE = teleport-$(GITTAG)-$(OS)-$(ARCH)-centos6-fips-bin
+endif
 endif
 
 # PAM support will only be built into Teleport if headers exist at build time.
